@@ -5,12 +5,12 @@
 
 /* Implement the needed server-side functions here */
 
-bool_t
-minify_proc_1_svc(var, result, req)
-				input var;
-				output *result;
-				struct svc_req *req;
+output *
+minify_proc_1_svc(input var, struct svc_req *rqstp)
 {
+
+	static output result;
+
 	printf("%s\n", "1");
 	magickminify_init();
 	printf("%s\n", "2");
@@ -25,11 +25,15 @@ minify_proc_1_svc(var, result, req)
 	printf("%s\n", "6");
 	void *dst_val = magickminify(src,src_len,dst_len);
 
-	result->res.res_val = dst_val;
+	result.res.res_val = dst_val;
 
 	// magickminify_cleanup();
 
-	return result;
+	/*
+	 * insert server code here
+	 */
+
+	return &result;
 }
 
 int

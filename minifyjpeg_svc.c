@@ -16,10 +16,10 @@
 #define SIG_PF void(*)(int)
 #endif
 
-int
-_minify_proc_1 (input  *argp, void *result, struct svc_req *rqstp)
+static output *
+_minify_proc_1 (input  *argp, struct svc_req *rqstp)
 {
-	return (minify_proc_1_svc(*argp, result, rqstp));
+	return (minify_proc_1_svc(*argp, rqstp));
 }
 
 static void
@@ -28,12 +28,9 @@ minify_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	union {
 		input minify_proc_1_arg;
 	} argument;
-	union {
-		output minify_proc_1_res;
-	} result;
-	bool_t retval;
+	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
-	bool_t (*local)(char *, void *, struct svc_req *);
+	char *(*local)(char *, struct svc_req *);
 
 	switch (rqstp->rq_proc) {
 	case NULLPROC:
@@ -43,7 +40,7 @@ minify_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	case MINIFY_PROC:
 		_xdr_argument = (xdrproc_t) xdr_input;
 		_xdr_result = (xdrproc_t) xdr_output;
-		local = (bool_t (*) (char *, void *,  struct svc_req *))_minify_proc_1;
+		local = (char *(*)(char *, struct svc_req *)) _minify_proc_1;
 		break;
 
 	default:
@@ -55,17 +52,14 @@ minify_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		svcerr_decode (transp);
 		return;
 	}
-	retval = (bool_t) (*local)((char *)&argument, (void *)&result, rqstp);
-	if (retval > 0 && !svc_sendreply(transp, (xdrproc_t) _xdr_result, (char *)&result)) {
+	result = (*local)((char *)&argument, rqstp);
+	if (result != NULL && !svc_sendreply(transp, (xdrproc_t) _xdr_result, result)) {
 		svcerr_systemerr (transp);
 	}
 	if (!svc_freeargs (transp, (xdrproc_t) _xdr_argument, (caddr_t) &argument)) {
 		fprintf (stderr, "%s", "unable to free arguments");
 		exit (1);
 	}
-	if (!minify_prog_1_freeresult (transp, _xdr_result, (caddr_t) &result))
-		fprintf (stderr, "%s", "unable to free results");
-
 	return;
 }
 
