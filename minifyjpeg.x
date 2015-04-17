@@ -1,10 +1,10 @@
 struct input {
- opaque arg<>;
- int size;
+  opaque arg<>;
+  int *size;
 };
 
 struct output {
- opaque res<>;
+  opaque res<>;
 };
 
 program MINIFY_PROG { /* RPC service name */

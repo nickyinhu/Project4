@@ -12,7 +12,7 @@ xdr_input (XDR *xdrs, input *objp)
 
 	 if (!xdr_bytes (xdrs, (char **)&objp->arg.arg_val, (u_int *) &objp->arg.arg_len, ~0))
 		 return FALSE;
-	 if (!xdr_int (xdrs, &objp->size))
+	 if (!xdr_pointer (xdrs, (char **)&objp->size, sizeof (int), (xdrproc_t) xdr_int))
 		 return FALSE;
 	return TRUE;
 }

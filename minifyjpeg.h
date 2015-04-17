@@ -19,7 +19,7 @@ struct input {
 		u_int arg_len;
 		char *arg_val;
 	} arg;
-	int size;
+	int *size;
 };
 typedef struct input input;
 

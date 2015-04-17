@@ -9,40 +9,25 @@ minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
     * Use RPC to obtain a minified version of the jpeg image
     * stored in the array src_val and having src_len bytes.
     */
-    input var;
-    output *result;
+    struct input var;
+    var.arg.arg_val = src_val;
+    var.arg.arg_len = (u_int) src_len;
+    var.size = (int*) dst_len;
 
-    printf("%s\n", (char *)src_val);
-
-    printf("%s\n", "1");
-
-    void *result_val;
-    result_val = malloc(sizeof(void*));
-
-    printf("%s\n", "2");
-
-    memcpy(var.arg.arg_val,src_val,sizeof(void*));
-    var.arg.arg_len = src_len;
-    var.size = malloc(*dst_len);
-
-    printf("%s\n", "3");
+    struct output *result;
+    result = malloc(sizeof(struct output));
+    result->res.res_val = calloc(src_len,sizeof(char));
 
     result = minify_proc_1(var, cl);
-    printf("%s\n", "4");
     if (result == (output *) NULL) {
         clnt_perror (cl, "call failed");
     }
 
+    void *result_val;
+    result_val = (void*)result->res.res_val;
+    *dst_len = (int*)result->res.res_len;
 
-    clnt_destroy (cl);
-
-
-    printf("%s\n", "5");
-
-    // memcpy(result_val,result->res.res_val,sizeof(void*));
-
-    return result->res.res_val;
-
+    return result_val;
 }
 
 CLIENT*
@@ -52,11 +37,10 @@ get_minify_client (char* server) {
 
     cl = clnt_create(server, MINIFY_PROG, MINIFY_VERS, "tcp");
 
-    if(cl == NULL) {
+    if(cl == (CLIENT *)NULL) {
     	clnt_pcreateerror(server);
     	exit(1);
     }
 
     return cl;
-
 }

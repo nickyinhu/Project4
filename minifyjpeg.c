@@ -8,30 +8,19 @@
 output *
 minify_proc_1_svc(input var, struct svc_req *rqstp)
 {
-
 	static output result;
 
-	printf("%s\n", "1");
-	magickminify_init();
-	printf("%s\n", "2");
 	void *src;
-	printf("%s\n", "3");
-	src = malloc(sizeof(void*));
-	printf("%s\n", "4");
-	memcpy(src, var.arg.arg_val, sizeof(var.arg.arg_val));
-	printf("%s\n", "5");
-	ssize_t src_len = (ssize_t) var.arg.arg_len;
-	ssize_t *dst_len = (ssize_t*) var.size;
-	printf("%s\n", "6");
-	void *dst_val = magickminify(src,src_len,dst_len);
+	src = var.arg.arg_val;	
+	ssize_t src_len = var.arg.arg_len;
+
+	magickminify_init();
+
+	void *dst_val;
+	dst_val = magickminify(src,src_len,(ssize_t*)var.size);
 
 	result.res.res_val = dst_val;
-
-	// magickminify_cleanup();
-
-	/*
-	 * insert server code here
-	 */
+	result.res.res_len = (u_int)*var.size;
 
 	return &result;
 }
