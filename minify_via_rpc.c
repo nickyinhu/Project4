@@ -18,8 +18,7 @@ minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
     if (result == (output *)NULL)
         clnt_perror (cl, "call failed");    
 
-    void *result_val;
-    result_val = (void*)result->output_u.res.res_val;
+    void *result_val = (void*)result->output_u.res.res_val;
     *dst_len = (int)result->output_u.res.res_len;
 
     return result_val;
