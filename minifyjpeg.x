@@ -3,8 +3,11 @@ struct input {
   int *size;
 };
 
-struct output {
-  opaque res<>;
+union output switch (int errno) {
+    case 0:
+        opaque res<>;
+    default:
+        void;
 };
 
 program MINIFY_PROG { /* RPC service name */

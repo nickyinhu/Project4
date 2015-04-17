@@ -22,7 +22,15 @@ xdr_output (XDR *xdrs, output *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_bytes (xdrs, (char **)&objp->res.res_val, (u_int *) &objp->res.res_len, ~0))
+	 if (!xdr_int (xdrs, &objp->errno))
 		 return FALSE;
+	switch (objp->errno) {
+	case 0:
+		 if (!xdr_bytes (xdrs, (char **)&objp->output_u.res.res_val, (u_int *) &objp->output_u.res.res_len, ~0))
+			 return FALSE;
+		break;
+	default:
+		break;
+	}
 	return TRUE;
 }

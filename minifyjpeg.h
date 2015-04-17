@@ -24,10 +24,13 @@ struct input {
 typedef struct input input;
 
 struct output {
-	struct {
-		u_int res_len;
-		char *res_val;
-	} res;
+	int errno;
+	union {
+		struct {
+			u_int res_len;
+			char *res_val;
+		} res;
+	} output_u;
 };
 typedef struct output output;
 

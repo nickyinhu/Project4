@@ -14,8 +14,8 @@ minify_proc_1_svc(input var, struct svc_req *rqstp){
 
 	magickminify_init();
 
-	result.res.res_val = magickminify(src,src_len,(ssize_t*)var.size);
-	result.res.res_len = (u_int)*var.size;
+	result.output_u.res.res_val = magickminify(src,src_len,(ssize_t*)var.size);
+	result.output_u.res.res_len = (u_int)*var.size;
 
 	return &result;
 }

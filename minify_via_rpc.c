@@ -5,26 +5,22 @@
 
 void*
 minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
-  /*
-    * Use RPC to obtain a minified version of the jpeg image
-    * stored in the array src_val and having src_len bytes.
-    */
-    struct input var;
+
+    input var;
     var.arg.arg_val = src_val;
     var.arg.arg_len = (u_int) src_len;
     var.size = (int*) dst_len;
 
-    struct output *result;
-    result->res.res_val = malloc(sizeof(src_len));
+    output *result = malloc(sizeof(struct output));
+    result->output_u.res.res_val = malloc(sizeof(src_len));
 
     result = minify_proc_1(var, cl);
-    if (result == (output *)NULL) {
-        clnt_perror (cl, "call failed");
-    }
+    if (result == (output *)NULL)
+        clnt_perror (cl, "call failed");    
 
     void *result_val;
-    result_val = (void*)result->res.res_val;
-    *dst_len = (int*)result->res.res_len;
+    result_val = (void*)result->output_u.res.res_val;
+    *dst_len = (int)result->output_u.res.res_len;
 
     return result_val;
 }
