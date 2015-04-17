@@ -15,11 +15,10 @@ minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
     var.size = (int*) dst_len;
 
     struct output *result;
-    result = malloc(sizeof(struct output));
-    result->res.res_val = calloc(src_len,sizeof(char));
+    result->res.res_val = malloc(sizeof(src_len));
 
     result = minify_proc_1(var, cl);
-    if (result == (output *) NULL) {
+    if (result == (output *)NULL) {
         clnt_perror (cl, "call failed");
     }
 
@@ -33,14 +32,11 @@ minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
 CLIENT*
 get_minify_client (char* server) {
 
-    CLIENT *cl;
-
-    cl = clnt_create(server, MINIFY_PROG, MINIFY_VERS, "tcp");
+    CLIENT *cl = clnt_create(server, MINIFY_PROG, MINIFY_VERS, "tcp");
 
     if(cl == (CLIENT *)NULL) {
     	clnt_pcreateerror(server);
     	exit(1);
     }
-
     return cl;
 }
