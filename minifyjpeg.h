@@ -8,6 +8,7 @@
 
 #include <rpc/rpc.h>
 
+#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,14 +40,14 @@ typedef struct output output;
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define MINIFY_PROC 1
-extern  output * minify_proc_1(input , CLIENT *);
-extern  output * minify_proc_1_svc(input , struct svc_req *);
+extern  enum clnt_stat minify_proc_1(input , output *, CLIENT *);
+extern  bool_t minify_proc_1_svc(input , output *, struct svc_req *);
 extern int minify_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define MINIFY_PROC 1
-extern  output * minify_proc_1();
-extern  output * minify_proc_1_svc();
+extern  enum clnt_stat minify_proc_1();
+extern  bool_t minify_proc_1_svc();
 extern int minify_prog_1_freeresult ();
 #endif /* K&R C */
 

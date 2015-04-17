@@ -11,7 +11,8 @@ void
 minify_prog_1(char *host)
 {
 	CLIENT *clnt;
-	output  *result_1;
+	enum clnt_stat retval_1;
+	output result_1;
 	input minify_proc_1_arg1;
 
 #ifndef	DEBUG
@@ -22,8 +23,8 @@ minify_prog_1(char *host)
 	}
 #endif	/* DEBUG */
 
-	result_1 = minify_proc_1(minify_proc_1_arg1, clnt);
-	if (result_1 == (output *) NULL) {
+	retval_1 = minify_proc_1(minify_proc_1_arg1, &result_1, clnt);
+	if (retval_1 != RPC_SUCCESS) {
 		clnt_perror (clnt, "call failed");
 	}
 #ifndef	DEBUG

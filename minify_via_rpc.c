@@ -10,18 +10,32 @@ minify_via_rpc(CLIENT *cl, void* src_val, size_t src_len, size_t *dst_len){
     var.arg.arg_val = src_val;
     var.arg.arg_len = (u_int) src_len;
     var.size = (int*) dst_len;
+    enum clnt_stat retval;
 
-    output *result = malloc(sizeof(struct output));
-    result->output_u.res.res_val = malloc(sizeof(src_len));
+    printf("%s\n", "1");
 
-    result = minify_proc_1(var, cl);
-    if (result == (output *)NULL)
-        clnt_perror (cl, "call failed");    
+    printf("Input file size is: %d\n", var.arg.arg_len);
 
-    void *result_val = (void*)result->output_u.res.res_val;
-    *dst_len = (int)result->output_u.res.res_len;
+    output result;
+    result.output_u.res.res_val = malloc(sizeof(src_len));
+    result.output_u.res.res_len = malloc(sizeof(u_int));
 
-    return result_val;
+    printf("%s\n", "2");
+
+    retval = minify_proc_1(var, &result, cl);
+    if (retval != RPC_SUCCESS) {
+        clnt_perror (cl, "call failed");
+    }
+
+    printf("%s\n", "3");
+
+    void *result_val = (void*)result.output_u.res.res_val;
+    *dst_len = (int)result.output_u.res.res_len;
+
+    printf("Output file size is: %d\n", (int)result.output_u.res.res_len);
+    printf("Actual output file size is: %d\n", *dst_len);
+
+    return result.output_u.res.res_val;
 }
 
 CLIENT*

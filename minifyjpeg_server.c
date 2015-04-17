@@ -6,14 +6,26 @@
 
 #include "minifyjpeg.h"
 
-output *
-minify_proc_1_svc(input arg1,  struct svc_req *rqstp)
+bool_t
+minify_proc_1_svc(input arg1, output *result,  struct svc_req *rqstp)
 {
-	static output  result;
+	bool_t retval;
 
 	/*
 	 * insert server code here
 	 */
 
-	return &result;
+	return retval;
+}
+
+int
+minify_prog_1_freeresult (SVCXPRT *transp, xdrproc_t xdr_result, caddr_t result)
+{
+	xdr_free (xdr_result, result);
+
+	/*
+	 * Insert additional freeing code here, if needed
+	 */
+
+	return 1;
 }
